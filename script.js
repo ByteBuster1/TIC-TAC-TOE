@@ -1,4 +1,3 @@
-
 let boxes = document.querySelectorAll(".box");
 let resetbtn = document.querySelector("#reset-btn");
 let newGameBtn = document.querySelector("#new-btn");
@@ -24,57 +23,70 @@ const resetGame = () => {
 };
 
 boxes.forEach((box) => {
-    box.addEventListener("click",() => {
-        console.log(box)
-      if (turnO) {
-        box.innerText= "O";
-        turnO = false;
-      } else {
-        box.innerText = "X";
-        turnO = true;
-      }
-      box.disabled = true ;
-      checkWinner();
-   });
+    box.addEventListener("click", () => {
+        if (box.innerText === "") { 
+            if (turnO) {
+                box.innerText = "O";
+                turnO = false;
+            } else {
+                box.innerText = "X";
+                turnO = true;
+            }
+            box.disabled = true;
+            checkWinner();
+        }
+    });
 });
 
-const disableBoxes =  () => {
-  for (let box of boxes) {
-    box.disabled = true ;
-  }
+const disableBoxes = () => {
+    for (let box of boxes) {
+        box.disabled = true;
+    }
 }
 
-const enableBoxes =  () => {
+const enableBoxes = () => {
     for (let box of boxes) {
-      box.disabled = false ;
-      box.innerText = "";
+        box.disabled = false;
+        box.innerText = "";
     }
-  }
+}
+
 const showWinner = (winner) => {
-    msg.innerText = `congratualtion ,winner is ${winner}`;
+    msg.innerText = `Congratulations, the winner is ${winner}`;
     msgContainer.classList.remove("hide");
     disableBoxes();
 }
 
+const showDraw = () => {
+    msg.innerText = "It's a draw!";
+    msgContainer.classList.remove("hide");
+}
+
 const checkWinner = () => {
-    for(let pattern of arr2) {
+    for (let pattern of arr2) {
         let pos1Value = boxes[pattern[0]].innerText;
         let pos2Value = boxes[pattern[1]].innerText;
         let pos3Value = boxes[pattern[2]].innerText;
 
-        if(pos1Value != "" && pos2Value != "" && pos3Value != ""){
-            if(pos1Value === pos2Value && pos2Value === pos3Value ){
+        if (pos1Value !== "" && pos2Value !== "" && pos3Value !== "") {
+            if (pos1Value === pos2Value && pos2Value === pos3Value) {
                 showWinner(pos1Value);
+                return; 
             }
         }
+    }
+    let isBoardFull = true;
+    for (let box of boxes) {
+        if (box.innerText === "") {
+            isBoardFull = false;
+            break;
+        }
+    }
+
+    if (isBoardFull) {
+        showDraw();
     }
 };
 
 newGameBtn.addEventListener("click", resetGame);
 resetbtn.addEventListener("click", resetGame);
-
-
-
-
-
-
